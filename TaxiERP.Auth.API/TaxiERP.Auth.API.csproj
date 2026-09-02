@@ -1,14 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="3.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.19" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.30">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -18,9 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TaxiERP.Auth.Application\TaxiERP.Auth.Application.csproj" />
     <ProjectReference Include="..\TaxiERP.Auth.Domain\TaxiERP.Auth.Domain.csproj" />
     <ProjectReference Include="..\TaxiERP.Auth.Infrastructure\TaxiERP.Auth.Infrastructure.csproj" />
-    <ProjectReference Include="..\TaxiERP.Auth.Application\TaxiERP.Auth.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using System.Text.Json.Serialization;
 
 namespace TaxiERP.Auth.Application.Features.Auth.Commands.RegistrarOrganizacao
 {
@@ -11,7 +12,10 @@ namespace TaxiERP.Auth.Application.Features.Auth.Commands.RegistrarOrganizacao
         public string Email { get; set; } = String.Empty;
         public string Telefone { get; set; } = String.Empty;
         public string Senha { get; set; } = String.Empty;
+
+        [JsonIgnore]
         public string? Ip { get; set; }
+        [JsonIgnore]
         public string? Navegador { get; set; }
     }
 }
