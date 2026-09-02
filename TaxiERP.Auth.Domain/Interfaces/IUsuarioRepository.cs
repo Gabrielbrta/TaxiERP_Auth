@@ -10,9 +10,10 @@ namespace TaxiERP.Auth.Domain.Interfaces
     public interface IUsuarioRepository
     {
         Task<Usuario?> BuscarPorEmail(string email);
-        Task<Usuario?> BuscarPorId(string email);
-        Task<Usuario?> Adicionar(Usuario usuario);
-        Task<Usuario?> Atualizar(Usuario usuario);
+        Task<Usuario?> BuscarPorId(Guid id);
+        Task Adicionar(Usuario usuario);
+        Task Atualizar(Usuario usuario);
+        Task Desativar(Guid id);
 
     }
 }

@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace TaxiERP.Auth.Domain.Entities
 {
-    public class Permissao
+    public class Permissao : BaseEntity
     {
-        public Guid Id { get; private set; }
-        public string Nome { get; private set; }
+        public string Nome { get; private set; } 
         public string Descricao { get; private set; }
 
         public ICollection<UsuarioPermissao> UsuarioPermissoes { get; private set; } = new List<UsuarioPermissao>();

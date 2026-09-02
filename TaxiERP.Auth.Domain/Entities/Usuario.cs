@@ -7,9 +7,8 @@ using TaxiERP.Auth.Domain.Enums;
 
 namespace TaxiERP.Auth.Domain.Entities
 {
-    public class Usuario
+    public class Usuario : BaseEntity
     {
-        public Guid Id { get; private set; }
         public Guid OrganizacaoId { get; private set; }
         public TipoUsuario Tipo { get; private set; }
         public string Email { get; private set; }
@@ -21,7 +20,6 @@ namespace TaxiERP.Auth.Domain.Entities
         public bool Ativo { get; private set; }
         public bool SenhaCriada { get; private set; }
         public Guid? CriadoPorId { get; private set; }
-        public DateTime DataCriacao { get; private set; }
 
         public Organizacao Organizacao { get; private set; }
         public Usuario? CriadoPor { get; private set; }
@@ -39,7 +37,7 @@ namespace TaxiERP.Auth.Domain.Entities
             Tipo = TipoUsuario.Admin;
             Ativo = true;
             SenhaCriada = false;
-            DataCriacao = DateTime.UtcNow;
+            CreatedAt = DateTime.UtcNow;
         }
         public Usuario(string nome, string email, string telefone, Guid organizacaoId, TipoUsuario tipo, Guid criadoPorId)
         {
@@ -52,7 +50,7 @@ namespace TaxiERP.Auth.Domain.Entities
             CriadoPorId = criadoPorId;
             Ativo = true;
             SenhaCriada = false;
-            DataCriacao = DateTime.UtcNow;
+            CreatedAt = DateTime.UtcNow;
         }
          
         public void DefinirSenha(string senhaHash)

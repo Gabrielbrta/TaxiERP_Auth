@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace TaxiERP.Auth.Domain.Entities
 {
-    public class Organizacao
+    public class Organizacao : BaseEntity
     {
-        public Guid Id { get; set; }
         public string Nome { get; set; }
         public string CnpjCpf { get; set; }
         public string Tipo { get; set; }
-        public DateTime DataCriacao { get; private set; }
 
         public ICollection<Usuario> Usuarios { get; private set; } = new List<Usuario>();
 
@@ -24,7 +22,7 @@ namespace TaxiERP.Auth.Domain.Entities
             Nome = nome;
             CnpjCpf = cnpjCpf;
             Tipo = tipo;
-            DataCriacao = DateTime.UtcNow;
+            CreatedAt = DateTime.UtcNow;
         }
     }
 }
