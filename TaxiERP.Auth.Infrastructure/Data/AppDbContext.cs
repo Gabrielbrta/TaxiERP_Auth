@@ -27,12 +27,20 @@ namespace TaxiERP.Auth.Infrastructure.Data
             modelBuilder.Entity<UsuarioPermissao>()
                 .HasOne(up => up.Usuario)
                 .WithMany(u => u.UsuarioPermissoes)
-                .HasForeignKey(up => up.UsuarioId);
+                .HasForeignKey(up => up.UsuarioId)
+                .IsRequired(false);
+
+            modelBuilder.Entity<UsuarioPermissao>()
+                .HasOne(up => up.Permissao)
+                .WithMany(p => p.UsuarioPermissoes)
+                .HasForeignKey(p => p.PermissaoId)
+                .IsRequired(false);
 
             modelBuilder.Entity<Usuario>()
                 .HasOne(u => u.Organizacao)
                 .WithMany(o => o.Usuarios)
-                .HasForeignKey(u => u.OrganizacaoId);
+                .HasForeignKey(u => u.OrganizacaoId)
+                .IsRequired(false);
 
             modelBuilder.Entity<Usuario>()
                 .HasOne(u => u.CriadoPor)
@@ -88,6 +96,29 @@ namespace TaxiERP.Auth.Infrastructure.Data
                 new Permissao(Guid.Parse("90000000-0000-0000-0000-000000000001"), "Acao:AlterarSenha", "Pode enviar a solicitação de alteração de senha")
             );
 
+
+
+            modelBuilder.Entity<Usuario>().HasQueryFilter(u => u.DeletedAt == null);
+            modelBuilder.Entity<Organizacao>().HasQueryFilter(o => o.DeletedAt == null);
+            modelBuilder.Entity<Permissao>().HasQueryFilter(o => o.DeletedAt == null);
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries<BaseEntity>();
+
+            foreach (var entry in entries) { 
+                if(entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = DateTime.UtcNow;
+                } 
+                else if(entry.State == EntityState.Modified)
+                {
+                    entry.Entity.DeletedAt = DateTime.UtcNow;
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 }
