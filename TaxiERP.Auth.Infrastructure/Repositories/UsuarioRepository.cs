@@ -10,15 +10,9 @@ using TaxiERP.Auth.Infrastructure.Data;
 
 namespace TaxiERP.Auth.Infrastructure.Repositories
 {
-    public class UsuarioRepository : IUsuarioRepository
+    public class UsuarioRepository : BaseRepository, IUsuarioRepository 
     {
-        private readonly AppDbContext _context;
-
-        public UsuarioRepository(AppDbContext context)
-        {
-            _context = context;
-        }
-
+        public UsuarioRepository(AppDbContext context) : base(context) { }
         public async Task<Usuario?> BuscarPorEmail(string email)
         {
             return await _context.Usuarios
@@ -38,13 +32,11 @@ namespace TaxiERP.Auth.Infrastructure.Repositories
         public async Task Adicionar(Usuario usuario)
         {
             await _context.Usuarios.AddAsync(usuario);
-            await _context.SaveChangesAsync();
         }
 
         public async Task Atualizar(Usuario usuario)
         {
             _context.Usuarios.Update(usuario);
-            await _context.SaveChangesAsync();
         }
 
         public async Task Desativar(Guid id)
@@ -54,8 +46,6 @@ namespace TaxiERP.Auth.Infrastructure.Repositories
             if(usuario != null)
             {
                 usuario.DeletedAt = DateTime.UtcNow;
-
-                await _context.SaveChangesAsync();
             }
         }
     }
