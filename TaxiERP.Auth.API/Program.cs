@@ -30,9 +30,10 @@ builder.Services.AddValidatorsFromAssembly(typeof(RegistrarOrganizacaoCommand).A
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
-//repositories
+// repositories
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IOrganizacaoRepository, OrganizacaoRepository>();
+builder.Services.AddScoped<IPermissaoRepository, PermissaoRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // swagger
