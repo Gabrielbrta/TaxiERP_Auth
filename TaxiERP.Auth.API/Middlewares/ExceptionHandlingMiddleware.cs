@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using System.Net;
 using System.Text.Json;
+using TaxiERP.Auth.Domain.Exceptions;
 
 namespace TaxiERP.Auth.API.Middlewares
 {
@@ -37,6 +38,14 @@ namespace TaxiERP.Auth.API.Middlewares
 
                 var resposta = new { erros };
 
+                await context.Response.WriteAsJsonAsync(resposta);
+            }
+            catch(RegraDeNegocioException ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.ContentType = "application/json";
+
+                var resposta = new { erro = ex.Message };
                 await context.Response.WriteAsJsonAsync(resposta);
             }
             catch (Exception ex) 
