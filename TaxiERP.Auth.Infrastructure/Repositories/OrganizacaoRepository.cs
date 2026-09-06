@@ -17,5 +17,10 @@ namespace TaxiERP.Auth.Infrastructure.Repositories
         {
            await _context.Organizacoes.AddAsync(organizacao);
         }
+
+        public async Task<Organizacao?> BuscarPorCPFCNPJ(string cpfCnpj)
+        {
+            return await _context.Organizacoes.FirstOrDefaultAsync(o => o.CnpjCpf == cpfCnpj);
+        }
     }
 }

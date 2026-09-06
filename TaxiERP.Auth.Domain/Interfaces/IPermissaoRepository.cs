@@ -7,10 +7,8 @@ using TaxiERP.Auth.Domain.Entities;
 
 namespace TaxiERP.Auth.Domain.Interfaces
 {
-    public interface IOrganizacaoRepository
+    public interface IPermissaoRepository
     {
-        Task<Organizacao?> BuscarPorId(Guid id);
-        Task<Organizacao?> BuscarPorCPFCNPJ(string cpfCnpj);
-        Task Adicionar(Organizacao organizacao);
+        Task<IEnumerable<Permissao>> BuscarTodasAsync();
     }
 }

@@ -74,5 +74,10 @@ namespace TaxiERP.Auth.Domain.Entities
         {
             Ativo = true;   
         }
+
+        public void AdicionarPermissao(Permissao permissao)
+        {
+            this.UsuarioPermissoes.Add(new UsuarioPermissao(this.Id, permissao.Id));
+        }
     }
 }
