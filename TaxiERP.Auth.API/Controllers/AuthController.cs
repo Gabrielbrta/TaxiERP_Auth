@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TaxiERP.Auth.Application.Features.Auth.Commands.LoginOrganizacao;
 using TaxiERP.Auth.Application.Features.Auth.Commands.RegistrarOrganizacao;
 
 namespace TaxiERP.Auth.API.Controllers
@@ -28,6 +29,13 @@ namespace TaxiERP.Auth.API.Controllers
             var resultado = await _mediator.Send(command);
 
             return CreatedAtAction(nameof (Registrar), new {id = resultado.OrganizacaoId}, resultado);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginCommand command)
+        {
+            var resultado = await _mediator.Send(command);
+            return Ok(resultado);
         }
     }
 }

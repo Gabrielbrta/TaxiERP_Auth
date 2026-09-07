@@ -7,6 +7,7 @@ using TaxiERP.Auth.Infrastructure.Data;
 using TaxiERP.Auth.Infrastructure.Repositories;
 using MediatR;
 using TaxiERP.Auth.Application.Common.Behaviors;
+using TaxiERP.Auth.Application.Features.Auth.Commands.LoginOrganizacao;
 
 Env.Load();
 
@@ -25,6 +26,7 @@ builder.Services.AddMediatR(cfg =>
 
 // FluentValidation
 builder.Services.AddValidatorsFromAssembly(typeof(RegistrarOrganizacaoCommand).Assembly);
+builder.Services.AddValidatorsFromAssembly(typeof(LoginCommand).Assembly);
 
 // EF
 builder.Services.AddControllers();
