@@ -8,6 +8,8 @@ using TaxiERP.Auth.Infrastructure.Repositories;
 using MediatR;
 using TaxiERP.Auth.Application.Common.Behaviors;
 using TaxiERP.Auth.Application.Features.Auth.Commands.LoginOrganizacao;
+using TaxiERP.Auth.Application.Interfaces;
+using TaxiERP.Auth.Infrastructure.Services;
 
 Env.Load();
 
@@ -37,6 +39,7 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IOrganizacaoRepository, OrganizacaoRepository>();
 builder.Services.AddScoped<IPermissaoRepository, PermissaoRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 // swagger
 builder.Services.AddEndpointsApiExplorer();

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaxiERP.Auth.Application.Features.Auth.Commands.LoginOrganizacao;
+using TaxiERP.Auth.Application.Interfaces;
 using TaxiERP.Auth.Domain.Entities;
 using TaxiERP.Auth.Domain.Exceptions;
 using TaxiERP.Auth.Domain.Interfaces;
@@ -15,9 +16,11 @@ namespace TaxiERP.Auth.Application.Features.Auth.Commands.Login
     public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginCommandResponse>
     {
         private readonly IUsuarioRepository _usuarioRepository;
-        public LoginCommandHandler(IUsuarioRepository usuarioRepository)
+        private readonly ITokenService _tokenService;
+        public LoginCommandHandler(IUsuarioRepository usuarioRepository, ITokenService tokenService)
         {
             _usuarioRepository = usuarioRepository;
+            _tokenService = tokenService;
         }
         public async Task<LoginCommandResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
@@ -33,9 +36,10 @@ namespace TaxiERP.Auth.Application.Features.Auth.Commands.Login
             }
 
             return new LoginCommandResponse {
-                UsuarioId =  usuario.Id,  
-                Nome = usuario.Nome, 
-                Email = usuario.Email
+                UsuarioId = usuario.Id,
+                Nome = usuario.Nome,
+                Email = usuario.Email,
+                Token = _tokenService.GerarToken(usuario)
             };
         }
     }
