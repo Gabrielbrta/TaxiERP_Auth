@@ -11,6 +11,7 @@ namespace TaxiERP.Auth.Domain.Interfaces
     {
         Task<Usuario?> BuscarPorEmail(string email);
         Task<Usuario?> BuscarPorId(Guid id);
+        Task<IEnumerable<Permissao>> BuscarPermissoesPorUsuarioId(Guid id);
         Task Adicionar(Usuario usuario);
         Task Atualizar(Usuario usuario);
         Task Desativar(Guid id);

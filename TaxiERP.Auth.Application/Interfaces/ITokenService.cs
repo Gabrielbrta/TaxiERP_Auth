@@ -9,6 +9,6 @@ namespace TaxiERP.Auth.Application.Interfaces
 {
     public interface ITokenService
     {
-        string GerarToken(Usuario usuario);
+        string GerarToken(Usuario usuario, IEnumerable<string> permissoes);
     }
 }

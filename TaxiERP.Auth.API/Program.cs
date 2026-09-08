@@ -1,15 +1,5 @@
 using DotNetEnv;
-using Microsoft.EntityFrameworkCore;
-using FluentValidation;
-using TaxiERP.Auth.Application.Features.Auth.Commands.RegistrarOrganizacao;
-using TaxiERP.Auth.Domain.Interfaces;
-using TaxiERP.Auth.Infrastructure.Data;
-using TaxiERP.Auth.Infrastructure.Repositories;
-using MediatR;
-using TaxiERP.Auth.Application.Common.Behaviors;
-using TaxiERP.Auth.Application.Features.Auth.Commands.LoginOrganizacao;
-using TaxiERP.Auth.Application.Interfaces;
-using TaxiERP.Auth.Infrastructure.Services;
+using TaxiERP.Auth.API.Extensions;
 
 Env.Load();
 
@@ -17,49 +7,21 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
 // Add services to the container.
 
-// MediatR
-builder.Services.AddMediatR(cfg =>
-{
-    cfg.RegisterServicesFromAssembly(typeof(RegistrarOrganizacaoCommand).Assembly);
-
-    cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-});
-
-
-// FluentValidation
-builder.Services.AddValidatorsFromAssembly(typeof(RegistrarOrganizacaoCommand).Assembly);
-builder.Services.AddValidatorsFromAssembly(typeof(LoginCommand).Assembly);
-
-// EF
+// Injeção de dependência
 builder.Services.AddControllers();
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
-
-// repositories
-builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-builder.Services.AddScoped<IOrganizacaoRepository, OrganizacaoRepository>();
-builder.Services.AddScoped<IPermissaoRepository, PermissaoRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<ITokenService, TokenService>();
-
-// swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddApplicationServices();
+builder.Services.AddDatabase(connectionString);
+builder.Services.AddRepositories();
+builder.Services.AddCustomServices();
+builder.Services.AddAuth(builder.Configuration);
 
 var app = builder.Build();
 
 // middlewares
-app.UseMiddleware<TaxiERP.Auth.API.Middlewares.ExceptionHandlingMiddleware>();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+app.UseCustomMiddlewares(app.Environment);
 
 app.MapControllers();
 

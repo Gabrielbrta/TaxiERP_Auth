@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TaxiERP.Auth.Application.Interfaces;
 using TaxiERP.Auth.Domain.Entities;
@@ -20,17 +21,19 @@ namespace TaxiERP.Auth.Infrastructure.Services
             _configuration = configuration;
         }
 
-        public string GerarToken(Usuario usuario)
+        public string GerarToken(Usuario usuario, IEnumerable<string> permissoes)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var chaveSecreta = Encoding.ASCII.GetBytes(_configuration["JWT_SECRET"]);
+            var permissoesJson = JsonSerializer.Serialize(permissoes);
 
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
                 new Claim(ClaimTypes.Email, usuario.Email.ToString()),
                 new Claim("OrganizacaoId", usuario.OrganizacaoId.ToString()),
+                new Claim("Permissoes", permissoesJson)
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor

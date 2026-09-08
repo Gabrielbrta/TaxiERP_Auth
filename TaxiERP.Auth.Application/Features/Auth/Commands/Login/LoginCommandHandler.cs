@@ -35,11 +35,15 @@ namespace TaxiERP.Auth.Application.Features.Auth.Commands.Login
                 throw new RegraDeNegocioException("E-mail ou senha inválidos!");
             }
 
-            return new LoginCommandResponse {
+            var permissoes = await _usuarioRepository.BuscarPermissoesPorUsuarioId(usuario.Id);
+            var nomesPermissoes = permissoes.Select(p => p.Nome).Order();
+
+            return new LoginCommandResponse
+            {
                 UsuarioId = usuario.Id,
                 Nome = usuario.Nome,
                 Email = usuario.Email,
-                Token = _tokenService.GerarToken(usuario)
+                Token = _tokenService.GerarToken(usuario, nomesPermissoes)
             };
         }
     }
