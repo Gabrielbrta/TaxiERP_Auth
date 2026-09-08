@@ -29,6 +29,14 @@ namespace TaxiERP.Auth.Infrastructure.Repositories
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
+        public async Task<IEnumerable<Permissao>> BuscarPermissoesPorUsuarioId(Guid id)
+        {
+            return await _context.UsuarioPermissoes
+                .Where(up => up.UsuarioId == id)
+                .Select(up => up.Permissao) 
+                .ToListAsync();
+        }
+
         public async Task Adicionar(Usuario usuario)
         {
             await _context.Usuarios.AddAsync(usuario);

@@ -1,6 +1,7 @@
 ﻿using BCrypt.Net;
 using MediatR;
 using TaxiERP.Auth.Domain.Entities;
+using TaxiERP.Auth.Domain.Exceptions;
 using TaxiERP.Auth.Domain.Interfaces;
 
 namespace TaxiERP.Auth.Application.Features.Auth.Commands.RegistrarOrganizacao
@@ -30,14 +31,14 @@ namespace TaxiERP.Auth.Application.Features.Auth.Commands.RegistrarOrganizacao
             var organizacaoExiste = await _organizacaoRepository.BuscarPorCPFCNPJ(request.CnpjCpf);
             if(organizacaoExiste != null)
             {
-                throw new Exception("CPF ou CPNJ já cadastrado!");
+                throw new RegraDeNegocioException("CPF ou CPNJ já cadastrado!");
             }
 
             var emailJaCadastrado = await _usuarioRepository.BuscarPorEmail(request.Email);
 
             if(emailJaCadastrado != null)
             {
-                throw new Exception("E-mail já cadastrado!");
+                throw new RegraDeNegocioException("E-mail já cadastrado!");
             }
 
             var organizacao = new Organizacao(request.NomeOrganizacao, request.CnpjCpf, request.Tipo);
