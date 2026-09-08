@@ -6,7 +6,7 @@ namespace TaxiERP.Auth.API.Extensions
     {
         public static IApplicationBuilder UseCustomMiddlewares(this IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // swagger apenan em dev
+            // swagger apenas em dev
             if (env.IsDevelopment())
             {
                 app.UseSwagger();
@@ -17,9 +17,16 @@ namespace TaxiERP.Auth.API.Extensions
             app.UseMiddleware<TaxiERP.Auth.API.Middlewares.ExceptionHandlingMiddleware>();
             app.UseHttpsRedirection();
 
+            //roteamento 
+            app.UseRouting();
+
+            // Rate limit
+            app.UseRateLimiter();
+
             // autenticação e autorização
             app.UseAuthentication();
             app.UseAuthorization();
+
 
             return app;
         }

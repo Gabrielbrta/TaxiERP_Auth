@@ -17,6 +17,7 @@ builder.Services.AddDatabase(connectionString);
 builder.Services.AddRepositories();
 builder.Services.AddCustomServices();
 builder.Services.AddAuth(builder.Configuration);
+builder.Services.AddRateLimitingConfig();
 
 var app = builder.Build();
 

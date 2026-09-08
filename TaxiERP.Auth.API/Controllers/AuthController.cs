@@ -1,13 +1,16 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TaxiERP.Auth.Application.Features.Auth.Commands.LoginOrganizacao;
+using Microsoft.AspNetCore.RateLimiting;
+using TaxiERP.Auth.Application.Features.Auth.Commands.Login;
 using TaxiERP.Auth.Application.Features.Auth.Commands.RegistrarOrganizacao;
 
 namespace TaxiERP.Auth.API.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
     public class AuthController : ControllerBase
     {
 
@@ -17,6 +20,7 @@ namespace TaxiERP.Auth.API.Controllers
         {
             _mediator = mediator;
         }
+        [AllowAnonymous]
         [HttpPost("registrar")]
         public async Task<IActionResult> Registrar([FromBody] RegistrarOrganizacaoCommand command)
         {
@@ -31,7 +35,9 @@ namespace TaxiERP.Auth.API.Controllers
             return CreatedAtAction(nameof (Registrar), new {id = resultado.OrganizacaoId}, resultado);
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
+        [EnableRateLimiting("LoginLimit")]
         public async Task<IActionResult> Login(LoginCommand command)
         {
             var resultado = await _mediator.Send(command);

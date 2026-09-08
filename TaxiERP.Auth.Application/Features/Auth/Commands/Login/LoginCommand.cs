@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaxiERP.Auth.Application.Features.Auth.Commands.Login;
 
-namespace TaxiERP.Auth.Application.Features.Auth.Commands.LoginOrganizacao
+namespace TaxiERP.Auth.Application.Features.Auth.Commands.Login
 {
     public class LoginCommand : IRequest<LoginCommandResponse>
     {

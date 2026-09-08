@@ -1,11 +1,13 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Threading.RateLimiting;
 using TaxiERP.Auth.Application.Common.Behaviors;
-using TaxiERP.Auth.Application.Features.Auth.Commands.LoginOrganizacao;
+using TaxiERP.Auth.Application.Features.Auth.Commands.Login;
 using TaxiERP.Auth.Application.Features.Auth.Commands.RegistrarOrganizacao;
 using TaxiERP.Auth.Application.Interfaces;
 using TaxiERP.Auth.Domain.Interfaces;
@@ -24,9 +26,9 @@ namespace TaxiERP.Auth.API.Extensions
             return services;
         }
 
+        // repositories
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            // repositories
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IOrganizacaoRepository, OrganizacaoRepository>();
             services.AddScoped<IPermissaoRepository, PermissaoRepository>();
@@ -36,6 +38,7 @@ namespace TaxiERP.Auth.API.Extensions
             return services;
         }
 
+        // application services
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             // MediatR
@@ -51,11 +54,14 @@ namespace TaxiERP.Auth.API.Extensions
 
             return services;
         }
+        // services
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
             services.AddScoped<ITokenService, TokenService>();
             return services;
         }
+
+        // token jwt
         public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) 
         {
             var chaveSecreta = configuration["JWT_SECRET"];
@@ -80,6 +86,29 @@ namespace TaxiERP.Auth.API.Extensions
             });
 
             services.AddAuthorization();
+            return services;
+        }
+
+        public static IServiceCollection AddRateLimitingConfig(this IServiceCollection services)
+        {
+            services.AddRateLimiter(options =>
+            {
+                options.AddFixedWindowLimiter("LoginLimit", opt =>
+                {
+                    opt.PermitLimit = 5;
+                    opt.Window = TimeSpan.FromMinutes(1);
+                    opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                    opt.QueueLimit = 0;
+                });
+
+                options.OnRejected = async (context, cancellationToken) =>
+                {
+                    context.HttpContext.Response.StatusCode = 429;
+                    context.HttpContext.Response.ContentType = "application/json";
+                    var resposta = new { erro = "Muitas tentativas de login. Aguarde 1 minuto." };
+                    await context.HttpContext.Response.WriteAsJsonAsync(resposta, cancellationToken);
+                };
+            });
             return services;
         }
     }

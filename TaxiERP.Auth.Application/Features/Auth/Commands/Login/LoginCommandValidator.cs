@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TaxiERP.Auth.Application.Features.Auth.Commands.LoginOrganizacao;
+using TaxiERP.Auth.Application.Features.Auth.Commands.Login;
 
 namespace TaxiERP.Auth.Application.Features.Auth.Commands.Login
 {
