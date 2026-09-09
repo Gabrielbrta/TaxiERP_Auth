@@ -88,7 +88,24 @@ namespace TaxiERP.Auth.API.Extensions
             services.AddAuthorization();
             return services;
         }
+        // CORS
+        public static IServiceCollection AddCorsConfig(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "AngularApp", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
+            });
 
+            return services;
+        }
+
+        // rate limit
         public static IServiceCollection AddRateLimitingConfig(this IServiceCollection services)
         {
             services.AddRateLimiter(options =>

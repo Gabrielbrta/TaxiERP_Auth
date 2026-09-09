@@ -17,6 +17,8 @@ namespace TaxiERP.Auth.API.Extensions
             app.UseMiddleware<TaxiERP.Auth.API.Middlewares.ExceptionHandlingMiddleware>();
             app.UseHttpsRedirection();
 
+            // CORS
+            app.UseCors("AngularApp");
             //roteamento 
             app.UseRouting();
 
