@@ -19,6 +19,7 @@ namespace TaxiERP.Auth.API.Extensions
 
             // CORS
             app.UseCors("AngularApp");
+
             //roteamento 
             app.UseRouting();
 

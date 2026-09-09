@@ -76,6 +76,16 @@ namespace TaxiERP.Auth.API.Extensions
             {
                 x.RequireHttpsMetadata = false; // mudar em produção
                 x.SaveToken = true;
+
+                x.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        context.Token = context.Request.Cookies["USER_TOKEN"];
+                        return Task.CompletedTask;
+                    }
+                };
+
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
