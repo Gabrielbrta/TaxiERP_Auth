@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -15,10 +16,12 @@ namespace TaxiERP.Auth.API.Controllers
     {
 
         private readonly IMediator _mediator;
+        private readonly IWebHostEnvironment _env;
 
-        public AuthController(IMediator mediator)
+        public AuthController(IMediator mediator, IWebHostEnvironment env)
         {
             _mediator = mediator;
+            _env = env;
         }
         [AllowAnonymous]
         [HttpPost("registrar")]
@@ -41,7 +44,31 @@ namespace TaxiERP.Auth.API.Controllers
         public async Task<IActionResult> Login(LoginCommand command)
         {
             var resultado = await _mediator.Send(command);
+            var cookieOptions = new CookieOptions
+            {
+                Secure = !_env.IsDevelopment(),
+                HttpOnly = true,
+                SameSite = SameSiteMode.Strict,
+                Path = "/",
+                Expires = DateTime.UtcNow.AddHours(8)
+            };
+            Response.Cookies.Append("USER_TOKEN", resultado.Token, cookieOptions);
             return Ok(resultado);
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var cookieOptions = new CookieOptions
+            {
+                Secure = !_env.IsDevelopment(),
+                HttpOnly = true,
+                SameSite = SameSiteMode.Strict,
+                Path = "/", 
+                Expires = DateTime.UtcNow.AddDays(-1)
+            };
+            Response.Cookies.Delete("USER_TOKEN", cookieOptions);
+            return Ok(new { mensagem = "Logout realizado com sucesso!" });
         }
     }
 }

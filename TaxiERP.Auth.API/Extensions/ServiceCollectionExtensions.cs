@@ -76,6 +76,16 @@ namespace TaxiERP.Auth.API.Extensions
             {
                 x.RequireHttpsMetadata = false; // mudar em produção
                 x.SaveToken = true;
+
+                x.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        context.Token = context.Request.Cookies["USER_TOKEN"];
+                        return Task.CompletedTask;
+                    }
+                };
+
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -88,7 +98,24 @@ namespace TaxiERP.Auth.API.Extensions
             services.AddAuthorization();
             return services;
         }
+        // CORS
+        public static IServiceCollection AddCorsConfig(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "AngularApp", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
+            });
 
+            return services;
+        }
+
+        // rate limit
         public static IServiceCollection AddRateLimitingConfig(this IServiceCollection services)
         {
             services.AddRateLimiter(options =>
